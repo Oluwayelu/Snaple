@@ -1,0 +1,17 @@
+export const CHANGE_DIRECTION = "CHANGE_DIRECTION";
+export const CHANGE_SPEED = "CHANGE_SPEED";
+export const CHANGE_BLOCK = "CHANGE_BLOCK";
+export const CHANGE_LEVEL = "CHANGE_LEVEL";
+export const MOVE = "MOVE";
+export const EAT_APPLE = "EAT_APPLE";
+export const EAT_SELF = "EAT_SELF";
+export const OUT_OF_BOUNDS = "OUT_OF_BOUNDS";
+export const PREGAME = "PREGAME";
+export const PLAYING = "PLAYING";
+export const PAUSE = "PAUSE";
+export const WON = "WON";
+export const LOST = "LOST";
+export const START_GAME = "START_GAME";
+export const PAUSE_GAME = "PAUSE_GAME";
+export const RESUME_GAME = "RESUME_GAME";
+export const RESET_GAME = "RESET_GAME";

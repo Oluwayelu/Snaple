@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: snakeFont;
+  src: url(fonts/snake.ttf);
+}
+
+body {
+  margin: 0;
+  background-color: #ceffce;
+  font-family: snakeFont, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.test {
+  flex-direction: column;
+  border-radius: 10px;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  border-top: 2px solid green;
+  border-right: 2px solid green;
+  border-bottom: 2px dashed green;
+  cursor: pointer;
+  overflow: hidden;
+  position: absolute;
+  font-weight: 400;
+  justify-content: space-around;
+}
