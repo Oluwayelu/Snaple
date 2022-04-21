@@ -15,10 +15,11 @@ import {
 import useScore from "hooks/useScore";
 import Confetti from "react-confetti";
 import { CardFooter } from "./styles";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { START } from "navigation/routes";
 
 const Modal = () => {
+  const history = useHistory();
   const { highScore } = useScore();
   const { state, dispatch, actions } = useContext(GameContext);
   return (
@@ -55,10 +56,14 @@ const Modal = () => {
           >
             Play Again
           </Button>
-          <Button color="red">
-            <Link to={START}>
-              <span>Go back Home</span>
-            </Link>
+          <Button
+            color="red"
+            onClick={() => {
+              dispatch({ type: actions.RESET_GAME });
+              history.push(START)
+            }}
+          >
+            Go back Home
           </Button>
         </CardFooter>
       </Card>

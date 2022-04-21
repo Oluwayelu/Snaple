@@ -1,20 +1,22 @@
-import { useContext, useEffect, useState} from "react"
-import {GameContext} from "context"
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useContext, useEffect, useState } from "react";
+import { GameContext } from "context";
 
 const useScore = () => {
-  const {state, actions} = useContext(GameContext)
-  const [highScore, setHighScrore] = useState(localStorage.getItem(`${state.level}HighestScore`) || 0)
+  const { state, actions } = useContext(GameContext);
+  const [highScore, setHighScrore] = useState(
+    localStorage.getItem(`${state.level}HighestScore`) || 0
+  );
 
-  const oldHighScore = highScore
+  const oldHighScore = highScore;
   useEffect(() => {
-    if(state.status === actions.LOST && state.score > highScore) {
-
+    if (state.status === actions.LOST && state.score > highScore) {
       setHighScrore(state.score);
-       localStorage.setItem(`${state.level}HighestScore`, state.score);
+      localStorage.setItem(`${state.level}HighestScore`, state.score);
     }
-  }, [actions.LOST, highScore, state.level, state.score, state.status])
+  }, [actions.LOST, state.level, state.score, state.status]);
 
-  return {highScore, oldHighScore}
-}
+  return { highScore, oldHighScore };
+};
 
-export default useScore
+export default useScore;

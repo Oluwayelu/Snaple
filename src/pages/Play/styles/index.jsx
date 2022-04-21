@@ -42,35 +42,3 @@ export const Section = styled.div`
     justify-content: ${({ justify }) => (justify === "end" ? "end" : "start")};
   }
 `;
-
-export const Controls = styled.div`
-  display: flex;
-  width: 280px;
-  align-items: center;
-  padding: 1em 0;
-  @media (min-width: 1024px) {
-    width: 400px;
-  }
-`;
-
-export const ControlSection = styled.div`
-  width: 100%;
-`;
-
-export const StartGameBtn = styled.button`
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const ResetGameBtn = styled.button`
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  outline: none;
-  background-color: "#007baa";
-`;

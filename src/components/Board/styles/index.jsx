@@ -6,9 +6,9 @@ export const Board = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  outline: 5px solid black;
+  box-shadow: 0 0 0 5px black;
   border-radius: 5px;
-  height: ${({ sm }) => (sm ? "25vh" : "50vh")};
+  height: ${({ sm }) => (sm ? "25vh" : "40vh")};
   width: ${({ sm }) => (sm ? "70%" : "100%")};
 
   @media (min-width: 1024px) {

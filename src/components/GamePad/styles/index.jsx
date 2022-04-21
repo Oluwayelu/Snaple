@@ -5,7 +5,7 @@ export const Pad = styled.div`
   flex-direction: column;
   height: 200px;
   width: 200px;
-  outline: 2px solid #000;
+  box-shadow: 0 0 0 2px black;
   border-radius: 100%;
   background-color: #fff;
 
@@ -23,7 +23,7 @@ export const Button = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  outline: ${({ center }) => center && "2px solid #000000"};
+  box-shadow: ${({ center }) => center && "0 0 0 2px black"};
   border-radius: ${({ center }) => center && "100%"};
 `;
 

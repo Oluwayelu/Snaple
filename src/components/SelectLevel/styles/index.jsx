@@ -27,6 +27,6 @@ export const Button = styled.div`
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  outline: ${({ active }) => active && "2px solid green"};
+  box-shadow: ${({ active }) => active && "0 0 0 2px green"};
   background-color: ${({ color }) => color};
 `;
