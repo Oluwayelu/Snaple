@@ -22,34 +22,37 @@ const Modal = () => {
   const history = useHistory();
   const { highScore } = useScore();
   const { state, dispatch, actions } = useContext(GameContext);
+  const won = state.status === actions.WON;
+  const isNewHighScore = state.score >= highScore && state.score > 0;
+
   return (
     <Main>
       <Background />
-      {state.score >= highScore && (
+      {(won || isNewHighScore) && (
         <Fragment>
-          <Confetti width={window.innerWidth} height={window.innerHeight} />
+          <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={won ? 400 : 200} />
           <Congrats>
-            <p>You Beat HIGHSCORE!!!</p>
+            <p>{won ? "You filled the board! You Win!" : "New High Score!"}</p>
           </Congrats>
         </Fragment>
       )}
 
       <Card>
-        <CardHeader>
-          Game Over
+        <CardHeader won={won}>
+          {won ? "Victory!" : "Game Over"}
           <Level>{state.level}</Level>
         </CardHeader>
         <CardBody>
           <Content justify="between">
-            <div>Your Scored: {state.score}</div>
-            <div>Highest Score: {highScore}</div>
+            <div>Your Score: {state.score}</div>
+            <div>Best: {highScore}</div>
           </Content>
 
           <SelectLevel />
         </CardBody>
         <CardFooter>
           <Button
-            color="green"
+            color="#39ff88"
             onClick={() => {
               dispatch({ type: actions.RESET_GAME });
             }}
@@ -57,13 +60,13 @@ const Modal = () => {
             Play Again
           </Button>
           <Button
-            color="red"
+            color="#ff5d5d"
             onClick={() => {
               dispatch({ type: actions.RESET_GAME });
-              history.push(START)
+              history.push(START);
             }}
           >
-            Go back Home
+            Home
           </Button>
         </CardFooter>
       </Card>

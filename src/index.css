@@ -2,23 +2,28 @@
   box-sizing: border-box;
 }
 
-@font-face {
-  font-family: snakeFont;
-  src: url(fonts/snake.ttf);
+:root {
+  --bg: #070c16;
+  --bg-elevated: #0f1728;
+  --accent: #39ff88;
+  --text: #e6fff0;
+  --text-dim: rgba(230, 255, 240, 0.6);
 }
 
 body {
   margin: 0;
-  background-color: #ceffce;
-  font-family: snakeFont, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+  background: radial-gradient(circle at 50% 0%, #101c30 0%, #070c16 60%);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
 #root {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
 }
 
@@ -31,18 +36,11 @@ a {
   text-decoration: none;
 }
 
-.test {
-  flex-direction: column;
-  border-radius: 10px;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
-  border-top: 2px solid green;
-  border-right: 2px solid green;
-  border-bottom: 2px dashed green;
-  cursor: pointer;
-  overflow: hidden;
-  position: absolute;
-  font-weight: 400;
-  justify-content: space-around;
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--accent);
+  color: #0b1220;
 }

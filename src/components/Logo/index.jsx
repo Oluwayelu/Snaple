@@ -6,8 +6,8 @@ const Logo = ({ sm }) => {
     <Title sm={sm}>
       <span
         style={{
-          color: "green",
-          fontSize: `${sm ? "30px" : "50px"}`,
+          color: "#39ff88",
+          fontSize: `${sm ? "24px" : "40px"}`,
         }}
       >
         S

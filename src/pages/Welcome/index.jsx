@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Main, Button, Content } from "./styles";
+import { Main, Button, Content, Tagline } from "./styles";
 import { PLAY } from "navigation/routes";
 import { Link } from "react-router-dom";
 import { Board, Header, Loader, SelectLevel } from "components";
@@ -7,11 +7,11 @@ import { FaPlay } from "react-icons/fa";
 
 const Welcome = () => {
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 10000);
-  }, [loading]);
+    const timer = setTimeout(() => setLoading(false), 900);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (loading) {
     return (
@@ -21,17 +21,20 @@ const Welcome = () => {
       </Main>
     );
   }
+
   return (
     <Main>
       <Header />
       <Board sm />
+      <Tagline>Classic snake, reimagined with mazes.</Tagline>
       <Content>
         <SelectLevel />
-        <Button color="green">
-          <Link to={PLAY}>
+        <Link to={PLAY} style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Button color="#39ff88">
             <FaPlay />
-          </Link>
-        </Button>
+            &nbsp;Play
+          </Button>
+        </Link>
       </Content>
     </Main>
   );

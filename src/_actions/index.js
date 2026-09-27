@@ -1,90 +1,69 @@
-import { directions, initApple, initSnake } from "utils";
+import { BOARD_SIZE, directions } from "utils";
 import { OUT_OF_BOUNDS, EAT_APPLE, EAT_SELF, MOVE } from "./types";
+
+function hitsBlock(block, row, col) {
+  for (let i = 0; i < block.length; i++) {
+    if (block[i][0] === row && block[i][1] === col) return true;
+  }
+  return false;
+}
 
 export function getNextAction(state) {
   const [snakeRow, snakeCol] = state.snake[state.snake.length - 1];
-  const [rowMod, colMod] = directions[state.directionCode];
+  const [rowMod, colMod] = directions[state.queuedDirectionCode];
 
   const newRow = snakeRow + rowMod;
   const newCol = snakeCol + colMod;
 
-  console.log({ action: state.status });
-
   if (
     newRow < 0 ||
-    newRow >= state.board.length ||
+    newRow >= BOARD_SIZE ||
     newCol < 0 ||
-    newCol >= state.board[0].length ||
-    state.board[newRow][newCol] === 3
+    newCol >= BOARD_SIZE ||
+    hitsBlock(state.block, newRow, newCol)
   ) {
     return OUT_OF_BOUNDS;
   }
 
-  // apple may be undefined between renders
-  // short circuit catches type errors
   const apple = state.apple || [null, null];
-
   if (newRow === apple[0] && newCol === apple[1]) {
     return EAT_APPLE;
   }
 
-  if (
-    state.snake.some(
-      ([currSnakeRow, currSnakeCol]) =>
-        currSnakeRow === newRow && currSnakeCol === newCol
-    )
-  ) {
+  // the tail (index 0) vacates this same tick, so moving into it is legal
+  const body = state.snake.slice(1);
+  if (body.some(([r, c]) => r === newRow && c === newCol)) {
     return EAT_SELF;
   }
 
   return MOVE;
 }
 
+// returns null when there is no free cell left on the board (a win)
 export function chooseApple(state) {
-  let newAppleRow = Math.floor(Math.random() * state.board.length);
-  let newAppleCol = Math.floor(Math.random() * state.board[0].length);
+  const occupied = new Set([
+    ...state.snake.map(([r, c]) => `${r},${c}`),
+    ...state.block.map(([r, c]) => `${r},${c}`),
+  ]);
 
-  while (
-    // eslint-disable-next-line no-loop-func
-    state.snake.some(([row, col]) => newAppleRow === row && newAppleCol === col)
-  ) {
-    newAppleRow = Math.floor(Math.random() * state.board.length);
-    newAppleCol = Math.floor(Math.random() * state.board[0].length);
-  }
+  if (occupied.size >= BOARD_SIZE * BOARD_SIZE) return null;
 
-  while (
-    // eslint-disable-next-line no-loop-func
-    state.block.some(([row, col]) => newAppleRow === row && newAppleCol === col)
-  ) {
-    newAppleRow = Math.floor(Math.random() * state.board.length);
-    newAppleCol = Math.floor(Math.random() * state.board[0].length);
-  }
+  let row, col, key;
+  let attempts = 0;
+  do {
+    row = Math.floor(Math.random() * BOARD_SIZE);
+    col = Math.floor(Math.random() * BOARD_SIZE);
+    key = `${row},${col}`;
+    attempts++;
+  } while (occupied.has(key) && attempts < 200);
 
-  return [newAppleRow, newAppleCol];
-}
-
-export function getNewBoard(apple = initApple, snake = initSnake, block = []) {
-  return new Array(30).fill(null).map((_, rowIdx) =>
-    new Array(30).fill(0).map((_, colIdx) => {
-      const [appleRow, appleCol] = apple;
-      const isApple = appleRow === rowIdx && appleCol === colIdx;
-      const isSnake = snake.some(
-        ([snakeRow, snakeCol]) => snakeRow === rowIdx && snakeCol === colIdx
-      );
-      const isBlock = block.some(
-        ([blockRow, blockCol]) => blockRow === rowIdx && blockCol === colIdx
-      );
-
-      switch (true) {
-        case isSnake:
-          return 1;
-        case isApple:
-          return 2;
-        case isBlock:
-          return 3;
-        default:
-          return 0;
+  if (occupied.has(key)) {
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        if (!occupied.has(`${r},${c}`)) return [r, c];
       }
-    })
-  );
+    }
+  }
+
+  return [row, col];
 }

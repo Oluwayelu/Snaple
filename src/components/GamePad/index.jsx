@@ -44,7 +44,7 @@ const GamePad = () => {
           <Button
             center
             onClick={() => {
-              if (state.status === actions.LOST) {
+              if (state.status === actions.LOST || state.status === actions.WON) {
                 dispatch({ type: actions.RESET_GAME });
               } else {
                 dispatch({ type: actions.START_GAME });

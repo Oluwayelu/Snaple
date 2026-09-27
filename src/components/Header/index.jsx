@@ -2,7 +2,7 @@ import { Logo } from "components";
 import { useContext } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { GameContext } from "context";
-import { Nav, LeftSection, RightSection } from "./styles";
+import { Nav, LeftSection, RightSection, ScoreLabel } from "./styles";
 import useScore from "hooks/useScore";
 import { START } from "navigation/routes";
 
@@ -21,14 +21,10 @@ const Header = () => {
       </LeftSection>
       {!welcomePage && (
         <RightSection>
-          <p
-            style={{
-              color: `${state.score > highScore ? "green" : "black"}`,
-            }}
-          >
+          <ScoreLabel lead={state.score > highScore}>
             Score: {state.score}
-          </p>
-          <p>HighScore: {highScore}</p>
+          </ScoreLabel>
+          <ScoreLabel>Best: {highScore}</ScoreLabel>
         </RightSection>
       )}
     </Nav>

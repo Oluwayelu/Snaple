@@ -1,17 +1,19 @@
-import { directions, initApple, initSnake } from "utils";
-import { getNewBoard, chooseApple } from "_actions";
+import { directions, initApple, initSnake, levelOptions } from "utils";
+import { chooseApple } from "_actions";
 import * as actions from "_actions/types";
 
+const defaultLevel = levelOptions[0];
+
 export const initState = {
-  board: getNewBoard(),
   directionCode: 39,
+  queuedDirectionCode: 39,
   apple: [...initApple],
   snake: [...initSnake],
-  block: [],
+  block: defaultLevel.block,
   status: actions.PREGAME,
-  gameInterval: null,
-  level: "Easy",
-  speed: 200,
+  level: defaultLevel.name,
+  speed: defaultLevel.speed,
+  baseSpeed: defaultLevel.speed,
   score: 0,
   countApple: 0,
 };
@@ -19,53 +21,65 @@ export const initState = {
 function gameReducer(state, { type, payload }) {
   switch (type) {
     case actions.CHANGE_DIRECTION:
-      // prevent changing direction along same axis, ie left if currently moving right, down if currently moving up
+      // ignore reversing straight into the segment behind the head
       if (Math.abs(state.directionCode - payload) === 2) return state;
-      return { ...state, directionCode: payload };
+      return { ...state, queuedDirectionCode: payload };
 
     case actions.CHANGE_SPEED:
       return { ...state, speed: payload };
 
     case actions.CHANGE_LEVEL:
       return {
-        ...state,
+        ...initState,
         block: payload.block,
         level: payload.name,
-        board: getNewBoard(state.apple, state.snake, payload.block),
+        speed: payload.speed,
+        baseSpeed: payload.speed,
       };
 
     case actions.MOVE: {
       const [headRow, headCol] = state.snake[state.snake.length - 1];
-      const [rowMod, colMod] = directions[state.directionCode];
+      const [rowMod, colMod] = directions[state.queuedDirectionCode];
       const newHead = [headRow + rowMod, headCol + colMod];
-
       const newSnake = [...state.snake.slice(1), newHead];
-      const newBoard = getNewBoard(state.apple, newSnake, state.block);
-
-      return { ...state, board: newBoard, snake: newSnake };
-    }
-
-    case actions.EAT_APPLE: {
-      const head = state.snake[state.snake.length - 1];
-      const [rowMod, colMod] = directions[state.directionCode];
-      const apple = [head[0] + rowMod, head[1] + colMod];
-
-      const newApple = chooseApple(state);
-      const newSnake = [...state.snake, apple];
 
       return {
         ...state,
         snake: newSnake,
-        board: getNewBoard(newApple, newSnake, state.block),
+        directionCode: state.queuedDirectionCode,
+      };
+    }
+
+    case actions.EAT_APPLE: {
+      const [headRow, headCol] = state.snake[state.snake.length - 1];
+      const [rowMod, colMod] = directions[state.queuedDirectionCode];
+      const newHead = [headRow + rowMod, headCol + colMod];
+      const newSnake = [...state.snake, newHead];
+
+      const newApple = chooseApple({ ...state, snake: newSnake });
+
+      if (!newApple) {
+        return {
+          ...state,
+          snake: newSnake,
+          apple: null,
+          directionCode: state.queuedDirectionCode,
+          status: actions.WON,
+          score: state.score + 100,
+        };
+      }
+
+      const nextCountApple = state.countApple + 1;
+      const speedBump = nextCountApple % 5 === 0 ? 10 : 0;
+
+      return {
+        ...state,
+        snake: newSnake,
         apple: newApple,
+        directionCode: state.queuedDirectionCode,
         score: state.score + 100,
-        countApple: state.countApple + 1,
-        speed:
-          state.speed !== 0 &&
-          state.countApple > 0 &&
-          state.countApple % 5 === 0
-            ? state.speed - 20
-            : state.speed,
+        countApple: nextCountApple,
+        speed: Math.max(50, state.speed - speedBump),
       };
     }
 
@@ -78,9 +92,10 @@ function gameReducer(state, { type, payload }) {
     case actions.RESET_GAME:
       return {
         ...initState,
-        board: getNewBoard(initApple, initSnake, state.block),
         block: state.block,
         level: state.level,
+        speed: state.baseSpeed,
+        baseSpeed: state.baseSpeed,
       };
 
     case actions.START_GAME:

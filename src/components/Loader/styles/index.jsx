@@ -12,15 +12,15 @@ const rotate360 = keyframes`
 const bounce = keyframes`
   0% {
     margin-bottom: 0;
-    background-color: yellow;
+    background-color: #ffd23f;
   }
   50% {
     margin-bottom: 1rem;
-    background-color: green;
+    background-color: #39ff88;
   }
   100% {
     margin-bottom: 0;
-    background-color: red;
+    background-color: #ff4d6d;
   }
 `;
 
